@@ -8,15 +8,29 @@ namespace Dlock\Datastore;
  */
 class Redis implements DatastoreInterface
 {
+    /**
+     * @var \Redis
+     */
     private $conn;
+
+    /**
+     * @var int
+     */
     private $lockTtl;
 
+    /**
+     * @param \Redis $conn
+     * @param int $lockTtl Num seconds the lock will be held until it expires.
+     */
     public function __construct(\Redis $conn, $lockTtl=3600)
     {
         $this->conn = $conn;
         $this->lockTtl = $lockTtl;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function aquireLock($lockId)
     {
         if ($this->conn->setnx($lockId, 1)) {
@@ -26,6 +40,9 @@ class Redis implements DatastoreInterface
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function releaseLock($lockId)
     {
         $this->conn->del($lockId);

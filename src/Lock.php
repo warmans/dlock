@@ -1,6 +1,9 @@
 <?php
 namespace Dlock;
 
+/**
+ * @author warmans
+ */
 class Lock
 {
     /**
@@ -15,7 +18,7 @@ class Lock
 
     /**
      * @param \Dlock\Datastore\DatastoreInterface $datastore
-     * @param string $id
+     * @param string $id identifier for lock to allow multiple locks to be created for different purposes.
      */
     public function __construct(Datastore\DatastoreInterface $datastore, $id='unnamed')
     {
@@ -24,6 +27,7 @@ class Lock
     }
 
     /**
+     * Get the configured datastore.
      *
      * @return Datastore\DatastoreInterface
      */
@@ -33,6 +37,8 @@ class Lock
     }
 
     /**
+     * Get the lock identifier.
+     *
      * @return string
      */
     public function getId()
@@ -41,7 +47,7 @@ class Lock
     }
 
     /**
-     * Apply the lock
+     * Apply the lock.
      *
      * @return bool
      */
@@ -51,7 +57,7 @@ class Lock
     }
 
     /**
-     * Release the lock
+     * Release the lock.
      *
      * @return bool
      */
@@ -64,6 +70,7 @@ class Lock
      * Lock the execution of a single function
      *
      * @param \Closure $task
+     * @return mixed result of closure
      */
     public function locked(\Closure $task)
     {
@@ -77,7 +84,7 @@ class Lock
                 throw $e;
             }
         }
-        
+
         //locked throws exceptions instead of returning false because the user may return false from their function
         throw new \RuntimeException('Could not aquire lock');
     }
