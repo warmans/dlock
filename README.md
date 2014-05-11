@@ -1,11 +1,21 @@
 Dlock
 =====
 
-Distributed locking library for PHP. This library allows a process to be locked across multiple servers using a cache server (Redis or Memcache).
+Distributed locking library for PHP. This library allows a process to be locked across multiple servers using a cache
+server (Redis or Memcache).
 
-The example use case is where you have a process that must happen e.g. hourly but cannot be duplicated such as an import. In this case all of your application servers can be setup with the import job but each hour only one (the one with the fastest system clock) will be able to aquire the lock so all the others will fail. If any server goes offline another will aquire the lock and imports will continue as normal.
+The example use case is where you have a process that must happen e.g. hourly but cannot be duplicated such as an
+import. In this case all of your application servers can be setup with the import job but each hour only one
+(the one with the fastest system clock) will be able to aquire the lock so all the others will fail. If any server
+goes offline another will aquire the lock and imports will continue as normal.
 
-Locking is achieved using atomic functions to avoid race conditions. To discourage the user creating their own race conditions there is no "isLocked" functionality. You must always attempt to create a lock to deterine the locked status.
+Like most distributed systems care should be taken to maintain consistent system clocks across severs. If servers have
+clocks that are more inconsistent than the time it takes to run a job you may still duplicate jobs. To avid this you
+could store a globally unique identifier for a job somewhere (e.g. in a redis set) and simply check that a job hasn't
+already been done after locking (note: not before or you have a race condition).
+
+Locking is achieved using atomic functions to avoid race conditions. To discourage the user creating their own race
+conditions there is no "isLocked" functionality. You must always attempt to create a lock to deterine the locked status.
 
 * [Usage](#usage)
 * [Adapters](#adapters)
