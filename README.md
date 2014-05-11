@@ -1,6 +1,8 @@
 Dlock
 =====
 
+[![Build Status](https://travis-ci.org/warmans/dlock.svg?branch=master)](https://travis-ci.org/warmans/dlock)
+
 Distributed locking library for PHP. This library allows a process to be locked across multiple servers using a cache
 server (Redis or Memcache).
 
