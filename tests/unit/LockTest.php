@@ -43,6 +43,31 @@ class LockTest  extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->object->aquire());
     }
 
+    public function testBlockingLockInstantSuccess()
+    {
+        $this->assertTrue($this->object->aquire(true, 1));
+    }
+
+    public function testBlockingLockEventualSuccess()
+    {
+        //configure mock to fail once then succeed
+        $mock = $this->getMock('\\Dlock\\Datastore\\Fakestore');
+        $mock->expects($this->exactly(2))->method('aquireLock')->will($this->onConsecutiveCalls(false, true));
+
+        //configure object under test to use mock
+        $this->object = new Lock($mock, 'testlock');
+
+        //check it worked
+        $this->assertTrue($this->object->aquire(true, 10));
+    }
+
+    public function testBlockingLockTimeout()
+    {
+        //lock object
+        $this->object->aquire();
+        $this->assertFalse($this->object->aquire(true, 1));
+    }
+
     public function testLockedAlreadyLocked()
     {
         $this->object->aquire();

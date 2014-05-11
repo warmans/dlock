@@ -47,13 +47,26 @@ class Lock
     }
 
     /**
-     * Apply the lock.
+     * Aquire the lock.
      *
-     * @return bool
+     * @param bool $blocking should the process block waiting to aquire lock? If false fail instantly.
+     * @param int $timeout number of seconds to wait for lock. If no lock in aquired within this time return false.
+     *
+     * @return bool false on failure
      */
-    public function aquire()
+    public function aquire($blocking = false, $timeout = 60)
     {
-        return $this->getDatastore()->aquireLock("dlock:{$this->getId()}");
+        if (false === $blocking) {
+            return $this->getDatastore()->aquireLock("dlock:{$this->getId()}");
+        } else {
+            while (!$this->getDatastore()->aquireLock("dlock:{$this->getId()}")) {
+                if (--$timeout <= 0) {
+                    return false;
+                }
+                sleep(1);
+            }
+            return true;
+        }
     }
 
     /**
@@ -70,11 +83,14 @@ class Lock
      * Lock the execution of a single function
      *
      * @param \Closure $task
+     * @param bool $blocking should the process block waiting to aquire lock? If false fail instantly.
+     * @param int $timeout number of seconds to wait for lock. If no lock in aquired within this time return false.
+     *
      * @return mixed result of closure
      */
-    public function locked(\Closure $task)
+    public function locked(\Closure $task, $blocking = false, $timeout = 60)
     {
-        if ($this->aquire()) {
+        if ($this->aquire($blocking, $timeout)) {
             try {
                 $res = $task();
                 $this->release();
