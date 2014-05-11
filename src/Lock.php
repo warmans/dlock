@@ -51,7 +51,7 @@ class Lock
      *
      * @return bool
      */
-    public function lock()
+    public function aquire()
     {
         return $this->getDatastore()->aquireLock("dlock:{$this->getId()}");
     }
@@ -61,7 +61,7 @@ class Lock
      *
      * @return bool
      */
-    public function unlock()
+    public function release()
     {
         return $this->getDatastore()->releaseLock("dlock:{$this->getId()}");
     }
@@ -74,13 +74,13 @@ class Lock
      */
     public function locked(\Closure $task)
     {
-        if ($this->lock()) {
+        if ($this->aquire()) {
             try {
                 $res = $task();
-                $this->unlock();
+                $this->release();
                 return $res;
             } catch (\Exception $e) {
-                $this->unlock();
+                $this->release();
                 throw $e;
             }
         }

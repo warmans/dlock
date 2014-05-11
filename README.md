@@ -57,9 +57,9 @@ $adapter = new \Dlock\Datastore\Memcache($memcache);
 
 //usable lock
 $lock = new \Dlock\Lock($adapter);
-if ($lock->lock()) {
+if ($lock->aquire()) {
     //do something
-    $lock->unlock();
+    $lock->release();
 } else {
    //handle lock failure
 }

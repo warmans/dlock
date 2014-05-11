@@ -26,26 +26,26 @@ class LockTest  extends \PHPUnit_Framework_TestCase
 
     public function testLockOk()
     {
-        $this->assertTrue($this->object->lock());
+        $this->assertTrue($this->object->aquire());
     }
 
     public function testLockAlreadyLocked()
     {
-        $this->assertTrue($this->object->lock());
-        $this->assertFalse($this->object->lock());
+        $this->assertTrue($this->object->aquire());
+        $this->assertFalse($this->object->aquire());
     }
 
     public function testUnlockOk()
     {
-        $this->object->lock();
-        $this->assertFalse($this->object->lock());
-        $this->object->unlock();
-        $this->assertTrue($this->object->lock());
+        $this->object->aquire();
+        $this->assertFalse($this->object->aquire());
+        $this->object->release();
+        $this->assertTrue($this->object->aquire());
     }
 
     public function testLockedAlreadyLocked()
     {
-        $this->object->lock();
+        $this->object->aquire();
         try {
             $this->object->locked(function() {
                 return;
@@ -62,7 +62,7 @@ class LockTest  extends \PHPUnit_Framework_TestCase
         $o = $this->object;
         $res = $this->object->locked(function() use ($o) {
             //if the lock fails we must have created one already
-            return $o->lock();
+            return $o->aquire();
         });
         $this->assertFalse($res);
     }
@@ -72,7 +72,7 @@ class LockTest  extends \PHPUnit_Framework_TestCase
         $this->object->locked(function() {
             return true;
         });
-        $this->assertTrue($this->object->lock());
+        $this->assertTrue($this->object->aquire());
     }
 
     public function testLockedRethrowsExceptions()
@@ -96,7 +96,7 @@ class LockTest  extends \PHPUnit_Framework_TestCase
                 throw new \Exception();
             });
         } catch (\Exception $e) {
-            $this->assertTrue($this->object->lock());
+            $this->assertTrue($this->object->aquire());
             return;
         }
 
