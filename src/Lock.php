@@ -20,7 +20,7 @@ class Lock
      * @param \Dlock\Datastore\DatastoreInterface $datastore
      * @param string $id identifier for lock to allow multiple locks to be created for different purposes.
      */
-    public function __construct(Datastore\DatastoreInterface $datastore, $id='unnamed')
+    public function __construct(Datastore\DatastoreInterface $datastore, $id = 'unnamed')
     {
         $this->datastore = $datastore;
         $this->id = $id;

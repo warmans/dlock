@@ -22,7 +22,7 @@ class Redis implements DatastoreInterface
      * @param \Redis $conn
      * @param int $lockTtl Num seconds the lock will be held until it expires.
      */
-    public function __construct(\Redis $conn, $lockTtl=3600)
+    public function __construct(\Redis $conn, $lockTtl = 3600)
     {
         $this->conn = $conn;
         $this->lockTtl = $lockTtl;

@@ -22,7 +22,7 @@ class Memcache implements DatastoreInterface
      * @param \Memcache $conn
      * @param int $lockTtl Num seconds the lock will be held until it expires.
      */
-    public function __construct(\Memcache $conn, $lockTtl=3600)
+    public function __construct(\Memcache $conn, $lockTtl = 3600)
     {
         $this->conn = $conn;
         $this->lockTtl = $lockTtl;
