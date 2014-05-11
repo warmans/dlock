@@ -1,7 +1,7 @@
 Dlock
 =====
 
-[![Build Status](https://travis-ci.org/warmans/dlock.svg?branch=master)](https://travis-ci.org/warmans/dlock)
+[![Build Status](https://travis-ci.org/warmans/dlock.svg?branch=master)](https://travis-ci.org/warmans/dlock) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/warmans/dlock/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/warmans/dlock/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/warmans/dlock/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/warmans/dlock/?branch=master)
 
 Distributed locking library for PHP. This library allows a process to be locked across multiple servers using a cache
 server (Redis or Memcache).
