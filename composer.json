@@ -2,6 +2,8 @@
     "name": "warmans/dlock",
     "type": "library",
     "description": "Distributed locking library",
+    "keywords": ["locking", "lock", "distributed"],
+    "homepage": "https://github.com/warmans/dlock",
     "authors": [
         {
             "name": "Stefan Warman",
