@@ -2,6 +2,15 @@
     "name": "warmans/dlock",
     "type": "library",
     "description": "Distributed locking library",
+    "authors": [
+        {
+            "name": "Stefan Warman",
+            "email": "stefan.warman@gmail.com"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/warmans/dlock"
+    },
     "require": {
         "php": ">=5.3.0"
     },
