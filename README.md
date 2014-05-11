@@ -27,6 +27,7 @@ Usage
 --------------
 
 Allow lock to handle locking/unlocking automatically using locked() method.
+
 ```
 //raw memcache connection
 $memcache = new \Memcache();
@@ -78,6 +79,7 @@ interface DatastoreInterface
 Included implementations are as follows:
 
 #### Memcache
+
 ```
 //raw memcache connection
 $memcache = new \Memcache();
@@ -88,6 +90,7 @@ $adapter = new \Dlock\Datastore\Memcache($memcache, 3600);
 ```
 
 #### Redis
+
 ```
 //raw redis connection
 $redis = new \Redis();
