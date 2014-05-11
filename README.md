@@ -100,7 +100,7 @@ $lock = new Lock([...], [...], $options);
 The third optional argument of the Lock's constructor is an options array. The options are as follows:
 
 | Option        | Default   | Description                           |
-| ------------- |:---------:| -------------------------------------:|
+| ------------- | --------- | ------------------------------------- |
 | ds_key_prefix | dlock     | Prefix used by cache key in datastore |
 
 
