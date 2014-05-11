@@ -20,6 +20,7 @@ Locking is achieved using atomic functions to avoid race conditions. To discoura
 conditions there is no "isLocked" functionality. You must always attempt to create a lock to deterine the locked status.
 
 * [Usage](#usage)
+* [Options](#options)
 * [Adapters](#adapters)
     - [Memcache](#memcache)
     - [Redis](#redis)
@@ -76,7 +77,7 @@ $adapter = new \Dlock\Datastore\Memcache($memcache);
 $lock = new \Dlock\Lock($adapter);
 
 //wait for up to 30 seconds for lock then return false
-if ($lock->acquire(true, 30)) {
+if ($lock->acquire(30)) {
     //do something
     $lock->release();
 } else {
@@ -86,8 +87,22 @@ if ($lock->acquire(true, 30)) {
 //or use closure with 30 second block
 $lock->locked(function(){
     //do something
-}, true, 30);
+}, 30);
 ```
+
+Options
+--------
+
+```php
+$lock = new Lock([...], [...], $options);
+```
+
+The third optional argument of the Lock's constructor is an options array. The options are as follows:
+
+| Option        | Default   | Description                           |
+| ------------- |:---------:| -------------------------------------:|
+| ds_key_prefix | dlock     | Prefix used by cache key in datastore |
+
 
 Adapters
 ----------
