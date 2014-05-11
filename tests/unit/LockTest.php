@@ -11,7 +11,7 @@ class LockTest  extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->object = new Lock(new Datastore\Fakestore, 'testlock');
+        $this->object = new Lock(new Datastore\Fakestore, 'testlock', array('someopt'=>'bar'));
     }
 
     public function testGetDatastore()
@@ -22,6 +22,17 @@ class LockTest  extends \PHPUnit_Framework_TestCase
     public function testGetLockId()
     {
         $this->assertEquals('testlock', $this->object->getId());
+    }
+
+    public function testSetGetOpt()
+    {
+        $this->object->setOpt('newopt', 'foo');
+        $this->assertEquals('foo', $this->object->getOpt('newopt'));
+    }
+
+    public function testGetOptSetByConstructor()
+    {
+        $this->assertEquals('bar', $this->object->getOpt('someopt'));
     }
 
     public function testLockOk()
@@ -45,7 +56,7 @@ class LockTest  extends \PHPUnit_Framework_TestCase
 
     public function testBlockingLockInstantSuccess()
     {
-        $this->assertTrue($this->object->acquire(true, 1));
+        $this->assertTrue($this->object->acquire(1));
     }
 
     public function testBlockingLockEventualSuccess()
@@ -58,14 +69,14 @@ class LockTest  extends \PHPUnit_Framework_TestCase
         $this->object = new Lock($mock, 'testlock');
 
         //check it worked
-        $this->assertTrue($this->object->acquire(true, 10));
+        $this->assertTrue($this->object->acquire(10));
     }
 
     public function testBlockingLockTimeout()
     {
         //lock object
         $this->object->acquire();
-        $this->assertFalse($this->object->acquire(true, 1));
+        $this->assertFalse($this->object->acquire(1));
     }
 
     public function testLockedAlreadyLocked()

@@ -17,13 +17,23 @@ class Lock
     private $id;
 
     /**
+     * @var array
+     */
+    private $options = array(
+        //datastore key prefix. The cache key used for the lock will be prefixed with this value.
+        'ds_key_prefix'=>'dlock'
+    );
+
+    /**
      * @param \Dlock\Datastore\DatastoreInterface $datastore
      * @param string $id identifier for lock to allow multiple locks to be created for different purposes.
+     * @param array $options additional options
      */
-    public function __construct(Datastore\DatastoreInterface $datastore, $id = 'unnamed')
+    public function __construct(Datastore\DatastoreInterface $datastore, $id = 'unnamed', array $options = array())
     {
         $this->datastore = $datastore;
         $this->id = $id;
+        $this->options = array_merge($this->options, $options);
     }
 
     /**
@@ -47,26 +57,44 @@ class Lock
     }
 
     /**
+     * Get option value
+     *
+     * @param string $name option name
+     * @return mixed
+     */
+    public function getOpt($name)
+    {
+        return isset($this->options[$name]) ? $this->options[$name] : null;
+    }
+
+    /**
+     * Set an option value
+     *
+     * @param string $name
+     * @param mixed $value
+     */
+    public function setOpt($name, $value)
+    {
+        $this->options[$name] = $value;
+    }
+
+    /**
      * acquire the lock.
      *
-     * @param bool $blocking should the process block waiting to acquire lock? If false fail instantly.
-     * @param int $timeout number of seconds to wait for lock. If no lock in acquired within this time return false.
+     * @param bool $block number of seconds to block for. 0 is non-blocking.
      *
      * @return bool false on failure
      */
-    public function acquire($blocking = false, $timeout = 60)
+    public function acquire($block = 0)
     {
-        if (false === $blocking) {
-            return $this->getDatastore()->acquireLock("dlock:{$this->getId()}");
-        } else {
-            while (!$this->getDatastore()->acquireLock("dlock:{$this->getId()}")) {
-                if (--$timeout <= 0) {
-                    return false;
-                }
-                sleep(1);
+        $started = time();
+        while (!$this->getDatastore()->acquireLock("{$this->getOpt('ds_key_prefix')}:{$this->getId()}")) {
+            if ($started + $block <= time()) {
+                return false;
             }
-            return true;
+            sleep(1);
         }
+        return true;
     }
 
     /**
@@ -76,7 +104,7 @@ class Lock
      */
     public function release()
     {
-        return $this->getDatastore()->releaseLock("dlock:{$this->getId()}");
+        return $this->getDatastore()->releaseLock("{$this->getOpt('ds_key_prefix')}:{$this->getId()}");
     }
 
     /**
@@ -88,9 +116,9 @@ class Lock
      *
      * @return mixed result of closure
      */
-    public function locked(\Closure $task, $blocking = false, $timeout = 60)
+    public function locked(\Closure $task, $block = 0)
     {
-        if ($this->acquire($blocking, $timeout)) {
+        if ($this->acquire($block)) {
             try {
                 $res = $task();
                 $this->release();
