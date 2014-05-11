@@ -30,7 +30,7 @@ Usage
 
 Allow lock to handle locking/unlocking automatically using locked() method.
 
-```
+```php
 //raw memcache connection
 $memcache = new \Memcache();
 $memcache->connect('localhost');
@@ -47,7 +47,7 @@ $lock->locked(function(){
 
 Alternatively manage it yourself
 
-```
+```php
 //raw memcache connection
 $memcache = new \Memcache();
 $memcache->connect('localhost');
@@ -70,7 +70,7 @@ Adapters
 
 Any class that implements the DatastoreInterface can be used as an adapter:
 
-```
+```php
 interface DatastoreInterface
 {
     public function aquireLock($lockId);
@@ -82,7 +82,7 @@ Included implementations are as follows:
 
 #### Memcache
 
-```
+```php
 //raw memcache connection
 $memcache = new \Memcache();
 $memcache->connect('localhost');
@@ -93,7 +93,7 @@ $adapter = new \Dlock\Datastore\Memcache($memcache, 3600);
 
 #### Redis
 
-```
+```php
 //raw redis connection
 $redis = new \Redis();
 $redis->connect('localhost');
