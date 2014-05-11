@@ -8,8 +8,12 @@ php:
 before_script:
   - composer install
 
-script: phpunit --testsuite=unit --coverage-text --coverage-clover=coverage.clover
+script: phpunit --coverage-text --coverage-clover=coverage.clover
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+
+services:
+  - redis-server
+  - memcached
