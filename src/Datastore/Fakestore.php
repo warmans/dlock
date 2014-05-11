@@ -16,7 +16,7 @@ class Fakestore implements DatastoreInterface
     /**
      * {@inheritdoc}
      */
-    public function aquireLock($lockId)
+    public function acquireLock($lockId)
     {
         if (isset($this->locks[$lockId])) {
             return false;

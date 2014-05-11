@@ -14,7 +14,7 @@ interface DatastoreInterface
      * @param string $lockId
      * @return bool
      */
-    public function aquireLock($lockId);
+    public function acquireLock($lockId);
 
     /**
      * Release the lock. Returns false if lock could not be released.

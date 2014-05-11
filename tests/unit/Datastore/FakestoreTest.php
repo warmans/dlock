@@ -20,36 +20,36 @@ class FakestoreTest  extends \PHPUnit_Framework_TestCase
         $this->object->releaseLock('bar');
     }
 
-    public function testAquireLockOk()
+    public function testacquireLockOk()
     {
-        $this->assertTrue($this->object->aquireLock('foo'));
+        $this->assertTrue($this->object->acquireLock('foo'));
     }
 
-    public function testAquireLockAlreadyLocked()
+    public function testacquireLockAlreadyLocked()
     {
-        $this->object->aquireLock('foo');
-        $this->assertFalse($this->object->aquireLock('foo'));
+        $this->object->acquireLock('foo');
+        $this->assertFalse($this->object->acquireLock('foo'));
     }
 
     public function testReleaseLock()
     {
-        $this->object->aquireLock('foo');
+        $this->object->acquireLock('foo');
         $this->object->releaseLock('foo');
-        $this->assertTrue($this->object->aquireLock('foo'));
+        $this->assertTrue($this->object->acquireLock('foo'));
     }
 
-    public function testAquireMultipleLocksOk()
+    public function testacquireMultipleLocksOk()
     {
-        $this->object->aquireLock('foo');
-        $this->assertTrue($this->object->aquireLock('bar'));
+        $this->object->acquireLock('foo');
+        $this->assertTrue($this->object->acquireLock('bar'));
     }
 
-    public function testAquireMultipleLocksAlreadyLocked()
+    public function testacquireMultipleLocksAlreadyLocked()
     {
-        $this->object->aquireLock('foo');
-        $this->object->aquireLock('bar');
+        $this->object->acquireLock('foo');
+        $this->object->acquireLock('bar');
 
-        $this->assertFalse($this->object->aquireLock('foo'));
-        $this->assertFalse($this->object->aquireLock('bar'));
+        $this->assertFalse($this->object->acquireLock('foo'));
+        $this->assertFalse($this->object->acquireLock('bar'));
     }
 }

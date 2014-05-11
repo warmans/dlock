@@ -31,7 +31,7 @@ class Memcache implements DatastoreInterface
     /**
      * {@inheritdoc}
      */
-    public function aquireLock($lockId)
+    public function acquireLock($lockId)
     {
         return $this->conn->add($lockId, 1, false, $this->lockTtl);
     }

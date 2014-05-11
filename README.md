@@ -8,8 +8,8 @@ server (Redis or Memcache).
 
 The example use case is where you have a process that must happen e.g. hourly but cannot be duplicated such as an
 import. In this case all of your application servers can be setup with the import job but each hour only one
-(the one with the fastest system clock) will be able to aquire the lock so all the others will fail. If any server
-goes offline another will aquire the lock and imports will continue as normal.
+(the one with the fastest system clock) will be able to acquire the lock so all the others will fail. If any server
+goes offline another will acquire the lock and imports will continue as normal.
 
 Like most distributed systems care should be taken to maintain consistent system clocks across severs. If servers have
 clocks that are more inconsistent than the time it takes to run a job you may still duplicate jobs. To avid this you
@@ -55,7 +55,7 @@ $memcache->connect('localhost');
 $adapter = new \Dlock\Datastore\Memcache($memcache);
 
 $lock = new \Dlock\Lock($adapter);
-if ($lock->aquire()) {
+if ($lock->acquire()) {
     //do something
     $lock->release();
 } else {
@@ -76,7 +76,7 @@ $adapter = new \Dlock\Datastore\Memcache($memcache);
 $lock = new \Dlock\Lock($adapter);
 
 //wait for up to 30 seconds for lock then return false
-if ($lock->aquire(true, 30)) {
+if ($lock->acquire(true, 30)) {
     //do something
     $lock->release();
 } else {
@@ -97,7 +97,7 @@ Any class that implements the DatastoreInterface can be used as an adapter:
 ```php
 interface DatastoreInterface
 {
-    public function aquireLock($lockId);
+    public function acquireLock($lockId);
     public function releaseLock($lockId);
 }
 ```

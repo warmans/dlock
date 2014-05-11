@@ -31,7 +31,7 @@ class Redis implements DatastoreInterface
     /**
      * {@inheritdoc}
      */
-    public function aquireLock($lockId)
+    public function acquireLock($lockId)
     {
         if ($this->conn->setnx($lockId, 1)) {
             $this->conn->expire($lockId, $this->lockTtl);

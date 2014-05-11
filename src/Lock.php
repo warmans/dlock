@@ -47,19 +47,19 @@ class Lock
     }
 
     /**
-     * Aquire the lock.
+     * acquire the lock.
      *
-     * @param bool $blocking should the process block waiting to aquire lock? If false fail instantly.
-     * @param int $timeout number of seconds to wait for lock. If no lock in aquired within this time return false.
+     * @param bool $blocking should the process block waiting to acquire lock? If false fail instantly.
+     * @param int $timeout number of seconds to wait for lock. If no lock in acquired within this time return false.
      *
      * @return bool false on failure
      */
-    public function aquire($blocking = false, $timeout = 60)
+    public function acquire($blocking = false, $timeout = 60)
     {
         if (false === $blocking) {
-            return $this->getDatastore()->aquireLock("dlock:{$this->getId()}");
+            return $this->getDatastore()->acquireLock("dlock:{$this->getId()}");
         } else {
-            while (!$this->getDatastore()->aquireLock("dlock:{$this->getId()}")) {
+            while (!$this->getDatastore()->acquireLock("dlock:{$this->getId()}")) {
                 if (--$timeout <= 0) {
                     return false;
                 }
@@ -83,14 +83,14 @@ class Lock
      * Lock the execution of a single function
      *
      * @param \Closure $task
-     * @param bool $blocking should the process block waiting to aquire lock? If false fail instantly.
-     * @param int $timeout number of seconds to wait for lock. If no lock in aquired within this time return false.
+     * @param bool $blocking should the process block waiting to acquire lock? If false fail instantly.
+     * @param int $timeout number of seconds to wait for lock. If no lock in acquired within this time return false.
      *
      * @return mixed result of closure
      */
     public function locked(\Closure $task, $blocking = false, $timeout = 60)
     {
-        if ($this->aquire($blocking, $timeout)) {
+        if ($this->acquire($blocking, $timeout)) {
             try {
                 $res = $task();
                 $this->release();
@@ -102,6 +102,6 @@ class Lock
         }
 
         //locked throws exceptions instead of returning false because the user may return false from their function
-        throw new \RuntimeException('Could not aquire lock');
+        throw new \RuntimeException('Could not acquire lock');
     }
 }

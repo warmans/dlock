@@ -28,11 +28,11 @@ class RedisTest extends \Dlock\Datastore\FakestoreTest
     {
         //1 second ttl
         $this->object = new Redis($this->redisConn, 1);
-        $this->object->aquireLock('foo');
+        $this->object->acquireLock('foo');
 
         sleep(2);
 
         //two seconds have elapsed - we should be able to lock again
-        $this->assertTrue($this->object->aquireLock('foo'));
+        $this->assertTrue($this->object->acquireLock('foo'));
     }
 }

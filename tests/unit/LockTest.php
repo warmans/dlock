@@ -26,51 +26,51 @@ class LockTest  extends \PHPUnit_Framework_TestCase
 
     public function testLockOk()
     {
-        $this->assertTrue($this->object->aquire());
+        $this->assertTrue($this->object->acquire());
     }
 
     public function testLockAlreadyLocked()
     {
-        $this->assertTrue($this->object->aquire());
-        $this->assertFalse($this->object->aquire());
+        $this->assertTrue($this->object->acquire());
+        $this->assertFalse($this->object->acquire());
     }
 
     public function testUnlockOk()
     {
-        $this->object->aquire();
-        $this->assertFalse($this->object->aquire());
+        $this->object->acquire();
+        $this->assertFalse($this->object->acquire());
         $this->object->release();
-        $this->assertTrue($this->object->aquire());
+        $this->assertTrue($this->object->acquire());
     }
 
     public function testBlockingLockInstantSuccess()
     {
-        $this->assertTrue($this->object->aquire(true, 1));
+        $this->assertTrue($this->object->acquire(true, 1));
     }
 
     public function testBlockingLockEventualSuccess()
     {
         //configure mock to fail once then succeed
         $mock = $this->getMock('\\Dlock\\Datastore\\Fakestore');
-        $mock->expects($this->exactly(2))->method('aquireLock')->will($this->onConsecutiveCalls(false, true));
+        $mock->expects($this->exactly(2))->method('acquireLock')->will($this->onConsecutiveCalls(false, true));
 
         //configure object under test to use mock
         $this->object = new Lock($mock, 'testlock');
 
         //check it worked
-        $this->assertTrue($this->object->aquire(true, 10));
+        $this->assertTrue($this->object->acquire(true, 10));
     }
 
     public function testBlockingLockTimeout()
     {
         //lock object
-        $this->object->aquire();
-        $this->assertFalse($this->object->aquire(true, 1));
+        $this->object->acquire();
+        $this->assertFalse($this->object->acquire(true, 1));
     }
 
     public function testLockedAlreadyLocked()
     {
-        $this->object->aquire();
+        $this->object->acquire();
         try {
             $this->object->locked(function() {
                 return;
@@ -87,7 +87,7 @@ class LockTest  extends \PHPUnit_Framework_TestCase
         $o = $this->object;
         $res = $this->object->locked(function() use ($o) {
             //if the lock fails we must have created one already
-            return $o->aquire();
+            return $o->acquire();
         });
         $this->assertFalse($res);
     }
@@ -97,7 +97,7 @@ class LockTest  extends \PHPUnit_Framework_TestCase
         $this->object->locked(function() {
             return true;
         });
-        $this->assertTrue($this->object->aquire());
+        $this->assertTrue($this->object->acquire());
     }
 
     public function testLockedRethrowsExceptions()
@@ -121,7 +121,7 @@ class LockTest  extends \PHPUnit_Framework_TestCase
                 throw new \Exception();
             });
         } catch (\Exception $e) {
-            $this->assertTrue($this->object->aquire());
+            $this->assertTrue($this->object->acquire());
             return;
         }
 
