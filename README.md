@@ -28,7 +28,7 @@ conditions there is no "isLocked" functionality. You must always attempt to crea
 Usage
 --------------
 
-Allow lock to handle locking/unlocking automatically using locked() method.
+Allow lock to handle locking/unlocking automatically using locked() method:
 
 ```php
 //raw memcache connection
@@ -38,14 +38,13 @@ $memcache->connect('localhost');
 //datastore adapter
 $adapter = new \Dlock\Datastore\Memcache($memcache);
 
-//usable lock
 $lock = new \Dlock\Lock($adapter);
 $lock->locked(function(){
     //do something
 });
 ```
 
-Alternatively manage it yourself
+Alternatively manage it yourself:
 
 ```php
 //raw memcache connection
@@ -55,7 +54,6 @@ $memcache->connect('localhost');
 //datastore adapter
 $adapter = new \Dlock\Datastore\Memcache($memcache);
 
-//usable lock
 $lock = new \Dlock\Lock($adapter);
 if ($lock->aquire()) {
     //do something
@@ -63,6 +61,32 @@ if ($lock->aquire()) {
 } else {
    //handle lock failure
 }
+```
+
+Finally if you want to wait for a lock to become available you can use a blocking lock:
+
+```php
+//raw memcache connection
+$memcache = new \Memcache();
+$memcache->connect('localhost');
+
+//datastore adapter
+$adapter = new \Dlock\Datastore\Memcache($memcache);
+
+$lock = new \Dlock\Lock($adapter);
+
+//wait for up to 30 seconds for lock then return false
+if ($lock->aquire(true, 30)) {
+    //do something
+    $lock->release();
+} else {
+   //handle lock failure
+}
+
+//or use closure with 30 second block
+$lock->locked(function(){
+    //do something
+}, true, 30);
 ```
 
 Adapters
