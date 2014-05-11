@@ -1,0 +1,15 @@
+{
+    "name": "warmans/dlock",
+    "type": "library",
+    "description": "Distributed locking library",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "suggest": {
+        "ext-redis": "For redis datastore",
+        "ext-memcache": "For memcache datastore"
+    },
+    "autoload": {
+        "psr-4": { "Dlock\\": "src/" }
+    }
+}
